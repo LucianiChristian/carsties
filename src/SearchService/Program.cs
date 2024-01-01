@@ -26,6 +26,12 @@ builder.Services.AddMassTransit(config =>
     
     config.UsingRabbitMq((context, cfg) =>
     {
+        cfg.Host(builder.Configuration["RabbitMq:Host"], "/", host =>
+        {
+            host.Username(builder.Configuration.GetValue("RabbitMQ:Username", "guest"));
+            host.Username(builder.Configuration.GetValue("RabbitMQ:Password", "guest"));
+        });
+        
         cfg.ReceiveEndpoint("search-auction-created", endpointConfig =>
         {
            // Will be triggered if an exception is thrown from the consumer's `Consume` method 
@@ -36,7 +42,6 @@ builder.Services.AddMassTransit(config =>
         
         cfg.ReceiveEndpoint("search-auction-deleted", endpointConfig =>
         {
-           // Will be triggered if an exception is thrown from the consumer's `Consume` method 
            endpointConfig.UseMessageRetry(retryConfig => retryConfig.Interval(5, 5));
            
            endpointConfig.ConfigureConsumer<AuctionDeletedConsumer>(context);
@@ -44,10 +49,23 @@ builder.Services.AddMassTransit(config =>
         
         cfg.ReceiveEndpoint("search-auction-updated", endpointConfig =>
         {
-           // Will be triggered if an exception is thrown from the consumer's `Consume` method 
            endpointConfig.UseMessageRetry(retryConfig => retryConfig.Interval(5, 5));
            
            endpointConfig.ConfigureConsumer<AuctionUpdatedConsumer>(context);
+        });
+        
+        cfg.ReceiveEndpoint("search-auction-finished", endpointConfig =>
+        {
+           endpointConfig.UseMessageRetry(retryConfig => retryConfig.Interval(5, 5));
+           
+           endpointConfig.ConfigureConsumer<AuctionFinishedConsumer>(context);
+        });
+        
+        cfg.ReceiveEndpoint("search-bid-placed", endpointConfig =>
+        {
+           endpointConfig.UseMessageRetry(retryConfig => retryConfig.Interval(5, 5));
+           
+           endpointConfig.ConfigureConsumer<BidPlacedConsumer>(context);
         });
         
         cfg.ConfigureEndpoints(context);

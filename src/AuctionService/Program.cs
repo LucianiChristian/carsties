@@ -29,9 +29,31 @@ builder.Services.AddMassTransit(config =>
     
     config.UsingRabbitMq((context, cfg) =>
     {
-        cfg.ReceiveEndpoint("auction-created-fault", x =>
+        cfg.Host(builder.Configuration["RabbitMq:Host"], "/", host =>
         {
-           x.ConfigureConsumer<AuctionCreatedFaultConsumer>(context);
+            host.Username(builder.Configuration.GetValue("RabbitMQ:Username", "guest"));
+            host.Username(builder.Configuration.GetValue("RabbitMQ:Password", "guest"));
+        });
+        
+        cfg.ReceiveEndpoint("auction-created-fault", endpointConfig =>
+        {
+           endpointConfig.UseMessageRetry(retryConfig => retryConfig.Interval(5, 5));
+           
+           endpointConfig.ConfigureConsumer<AuctionCreatedFaultConsumer>(context);
+        });
+        
+        cfg.ReceiveEndpoint("bid-placed", endpointConfig =>
+        { 
+            endpointConfig.UseMessageRetry(retryConfig => retryConfig.Interval(5, 5));
+           
+            endpointConfig.ConfigureConsumer<BidPlacedConsumer>(context);
+        });
+        
+        cfg.ReceiveEndpoint("auction-finished", endpointConfig =>
+        {
+            endpointConfig.UseMessageRetry(retryConfig => retryConfig.Interval(5, 5));
+            
+            endpointConfig.ConfigureConsumer<AuctionFinishedConsumer>(context);
         });
         
         cfg.ConfigureEndpoints(context);
