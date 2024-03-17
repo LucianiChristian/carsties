@@ -24,7 +24,7 @@ const initialState: State = {
     searchTerm: '',
 }
 
-export const useParamsStore = create<State & Actions>()(set => ({
+export const useSearchParamsStore = create<State & Actions>()(set => ({
     ...initialState,
     setParams: (newParams) => {
         set(state => {

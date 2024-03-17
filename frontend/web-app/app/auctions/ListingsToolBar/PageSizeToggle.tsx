@@ -1,12 +1,12 @@
 import * as React from "react"
 
 import { PageSize } from "@/types";
-import { useParamsStore } from "@/hooks/useParamsStore";
+import { useSearchParamsStore } from "@/hooks/useSearchParamsStore";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 export function PageSizeToggle() {
-    const pageSize = useParamsStore(state => state.pageSize);
-    const setParams = useParamsStore(state => state.setParams);
+    const pageSize = useSearchParamsStore(state => state.pageSize);
+    const setParams = useSearchParamsStore(state => state.setParams);
 
     function handleToggleChange(value: string) {
         setParams({pageSize: value as PageSize});

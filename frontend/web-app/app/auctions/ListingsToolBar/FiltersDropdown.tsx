@@ -10,13 +10,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { AuctionFilter, AuctionOrdering, PageSize } from "@/types";
-import { useParamsStore } from "@/hooks/useParamsStore";
+import { AuctionFilter, AuctionOrdering } from "@/types";
+import { useSearchParamsStore } from "@/hooks/useSearchParamsStore";
 import { FaFilter } from "react-icons/fa6";
 
 export function FiltersDropdown() {
-    const { orderBy, filterBy } = useParamsStore(state => state);
-    const setParams = useParamsStore(state => state.setParams);
+    const { orderBy, filterBy } = useSearchParamsStore(state => state);
+    const setParams = useSearchParamsStore(state => state.setParams);
 
     function handleOrderChange(value: string) {
         setParams({ orderBy: value as AuctionOrdering}) ;

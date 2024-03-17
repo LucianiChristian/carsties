@@ -5,7 +5,7 @@ import AuctionCard from './AuctionCard';
 import AppPagination from './AppPagination';
 import { getData } from '../actions/auctionActions';
 import { Auction, PagedResult } from '@/types';
-import { useParamsStore } from '@/hooks/useParamsStore';
+import { useSearchParamsStore } from '@/hooks/useSearchParamsStore';
 import queryString from 'query-string';
 import ListingsToolBar from './ListingsToolBar/Index';
 import EmptyFilter from '../components/EmptyFilter';
@@ -13,7 +13,7 @@ import EmptyFilter from '../components/EmptyFilter';
 export default function Listings() {
     const [ data, setData ] = useState<PagedResult<Auction>>();
 
-    const params = useParamsStore(state => ({
+    const params = useSearchParamsStore(state => ({
         pageNumber: state.pageNumber,
         pageSize: state.pageSize,
         orderBy: state.orderBy,
@@ -21,7 +21,7 @@ export default function Listings() {
         searchTerm: state.searchTerm,
     })); 
 
-    const setParams = useParamsStore(state => state.setParams);
+    const setParams = useSearchParamsStore(state => state.setParams);
     const url = queryString.stringifyUrl({url: '', query: params});
 
     useEffect(() => {

@@ -2,13 +2,13 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input'
-import { useParamsStore } from '@/hooks/useParamsStore';
+import { useSearchParamsStore } from '@/hooks/useSearchParamsStore';
 import React, { KeyboardEvent, MouseEvent, useEffect, useState } from 'react'
 import { FaSearch } from 'react-icons/fa';
 
 export default function Search() {
-    const setParams = useParamsStore(state => state.setParams); 
-    const { searchTerm } = useParamsStore(state => state);
+    const setParams = useSearchParamsStore(state => state.setParams); 
+    const { searchTerm } = useSearchParamsStore(state => state);
 
     const [ value, setValue ] = useState("");
 
